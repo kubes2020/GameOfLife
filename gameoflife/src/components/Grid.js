@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useCallback, useState } from "react";
 import "../Styles/Grid.css";
 import GridSquare from "./GridSquare.js";
 import { GridContext } from "./contexts/GridContext.js";
-import GameLogic from "./GameLogic.js";
+import GameLogic from "./Game/GameLogic.js";
 import { clone } from "ramda";
 
 function Grid() {
