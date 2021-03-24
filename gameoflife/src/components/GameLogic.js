@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 function GameLogic(props) {
-  const [theGrid, setTheGrid] = useState();
+  const gridLength = props.grid1.length ** 0.5;
 
-  useEffect(() => {
-    setTheGrid(props.grid1);
-  }, []);
-  console.log("theGrid???", theGrid[55].isAlive);
-  const gridLength = theGrid.length ** 0.5;
-
-  // This adjust isAlive only for grid2
+  // This adjusts isAlive but only for grid2
   const adjustNextGrid = (aliveCount, row, col) => {
     let index = row.toString() + col.toString();
     if (
       aliveCount >= 2 &&
       aliveCount <= 3 &&
-      theGrid[parseInt(index)].isAlive === 1
+      props.grid1[parseInt(index)].isAlive === 1
     ) {
       props.grid2[parseInt(index)].isAlive = 1;
-    } else if (aliveCount === 3 && theGrid[parseInt(index)].isAlive === 0) {
+    } else if (aliveCount === 3 && props.grid1[parseInt(index)].isAlive === 0) {
       props.grid2[parseInt(index)].isAlive = 1;
     } else {
       props.grid2[parseInt(index)].isAlive = 0;
@@ -26,8 +20,7 @@ function GameLogic(props) {
     return 0;
   };
 
-  // iterate through grid1 to find isAlive = 1
-  // Check in all directions to see if neighbors are alive === true
+  // These functions check in all directions to see if neighbors are alive === true
   const checkAliveN = (grid, row, col) => {
     let index = (row - 1).toString() + col.toString();
     return grid[parseInt(index)].isAlive === 1;
@@ -134,39 +127,45 @@ function GameLogic(props) {
     return deadIndices;
   };
 
-  // Iterate through array, stop at isAlive, then check neighbors
-  theGrid.map((item) => {
+  // Iterate through grid1 array, stop at isAlive === 1, then check neighbors
+  props.grid1.map((item) => {
     let deadList = [];
     if (item.isAlive === 1) {
       console.log("Alive Node!!!", item.row, item.col);
-      findNeighborsAlive(theGrid, item.row, item.col);
-      let index = item.row.toString() + item.col.toString();
-      theGrid[index].isVisited = 1;
+      findNeighborsAlive(props.grid1, item.row, item.col);
       // Find indices of all dead nodes, that surround this alive node
-      deadList = findIndicesOfDead(theGrid, item.row, item.col);
+      deadList = findIndicesOfDead(props.grid1, item.row, item.col);
       // Iterate through the deadList to pass row/col into findNeighborsAlive function
       deadList.map((dead) => {
         // console.log("dead row/col", dead.row, dead.col);
-        findNeighborsAlive(theGrid, dead.row, dead.col);
+        findNeighborsAlive(props.grid1, dead.row, dead.col);
         return 0;
       });
     }
     return 0;
   });
 
-  props.grid2.map((item) => {
-    if (item.isAlive === 1) {
-      console.log("It's alive in Grid2!", item.row, item.col);
-    } else {
-      console.log("nothing is alive in Grid2");
-    }
-    return 0;
-  });
+  console.log("this is props.grid2", props.grid2);
+
+  // props.grid2.map((item) => {
+  //   if (item.isAlive === 1) {
+  //     console.log("It's alive in Grid2!", item.row, item.col);
+  //   } else {
+  //     console.log("nothing is alive in Grid2");
+  //   }
+  //   return 0;
+  // });
+
+  function handleClick(e) {
+    e.preventDefault();
+    props.setStartingGrid(props.grid2);
+  }
 
   return (
     <>
       <h5>Test GameLogic Page</h5>
-      <p>{theGrid[55].isAlive}</p>
+      <p>{props.grid1[55].isAlive}</p>
+      <button onClick={handleClick}>Run Graph</button>
     </>
   );
 }

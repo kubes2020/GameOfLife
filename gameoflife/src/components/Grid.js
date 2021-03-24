@@ -7,8 +7,6 @@ import { clone } from "ramda";
 
 function Grid() {
   // const { startingGrid, setStartingGrid } = useContext(GridContext);
-  // const [startingGrid, setStartingGrid] = useState();
-  const [toggleOn, setToggleOn] = useState(false);
 
   let grid1 = [];
   let row = 0;
@@ -25,14 +23,12 @@ function Grid() {
           row: row,
           col: col,
           isAlive: 1,
-          isVisited: 0,
         });
       } else {
         grid1.push({
           row: row,
           col: col,
           isAlive: 0,
-          isVisited: 0,
         });
       }
 
@@ -40,12 +36,7 @@ function Grid() {
     }
     row += 1;
   }
-  // setStartingGrid(grid1);
-
-  // useEffect(() => {
-  //   setStartingGrid(grid1);
-  //   console.log("This is Grid yo!", startingGrid);
-  // }, [grid1]);
+  const [startingGrid, setStartingGrid] = useState(grid1);
 
   const grid2 = clone(grid1);
 
@@ -55,18 +46,16 @@ function Grid() {
   //   }
   // }, []);
 
-  function handleClick(e) {
-    e.preventDefault();
-    setToggleOn(true);
-  }
-
   return (
     <>
       <h1>Test Grid Page</h1>
-      <button onClick={handleClick}>Run Graph</button>
-      <div className="box-container">
-        {toggleOn ? <GameLogic grid1={grid1} grid2={grid2} /> : null}
-      </div>
+      <GameLogic
+        grid1={startingGrid}
+        grid2={grid2}
+        setStartingGrid={setStartingGrid}
+      />
+
+      <div className="box-container"></div>
     </>
   );
 }
