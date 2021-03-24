@@ -1,48 +1,72 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback, useState } from "react";
 import "../Styles/Grid.css";
 import GridSquare from "./GridSquare.js";
 import { GridContext } from "./contexts/GridContext.js";
+import GameLogic from "./GameLogic.js";
+import { clone } from "ramda";
 
 function Grid() {
-  const { setStartingGrid } = useContext(GridContext);
-  // for (let row = 0; row < 25; row++ ){
-  //     for (let col = 0; col < 25; col++){
-  //         return
-  //     }
-  // }
+  // const { startingGrid, setStartingGrid } = useContext(GridContext);
+  // const [startingGrid, setStartingGrid] = useState();
+  const [toggleOn, setToggleOn] = useState(false);
 
-  let items = [];
+  let grid1 = [];
   let row = 0;
   let col = 0;
 
-  while (row < 25) {
-    for (col = 0; col < 25; col++) {
-      items.push({
-        row: row,
-        col: col,
-        isAlive: false,
-      });
+  while (row < 10) {
+    for (col = 0; col < 10; col++) {
+      if (
+        (row === 4 && col === 5) ||
+        (row === 5 && col === 5) ||
+        (row === 6 && col === 5)
+      ) {
+        grid1.push({
+          row: row,
+          col: col,
+          isAlive: 1,
+          isVisited: 0,
+        });
+      } else {
+        grid1.push({
+          row: row,
+          col: col,
+          isAlive: 0,
+          isVisited: 0,
+        });
+      }
 
-      //   items.push(<div className="box">{col}</div>);
-      // console.log("this is row, col:", row, col);
+      // grid1.push(<div className="box">{col}</div>);
     }
     row += 1;
   }
+  // setStartingGrid(grid1);
 
-  useEffect(() => {
-    console.log("I ran!!!");
-    setStartingGrid(items);
-  }, []);
+  // useEffect(() => {
+  //   setStartingGrid(grid1);
+  //   console.log("This is Grid yo!", startingGrid);
+  // }, [grid1]);
+
+  const grid2 = clone(grid1);
+
+  // const makeGrid = useCallback((startingGrid) => {
+  //   if (startingGrid !== null) {
+  //     setStartingGrid(grid1);
+  //   }
+  // }, []);
+
+  function handleClick(e) {
+    e.preventDefault();
+    setToggleOn(true);
+  }
 
   return (
     <>
       <h1>Test Grid Page</h1>
-      <GridSquare />
-      {/* <div className="box-container">
-        {items.map((item) => (
-          <GridSquare row={item.row} col={item.col} isAlive={item.isAlive} />
-        ))}
-      </div> */}
+      <button onClick={handleClick}>Run Graph</button>
+      <div className="box-container">
+        {toggleOn ? <GameLogic grid1={grid1} grid2={grid2} /> : null}
+      </div>
     </>
   );
 }
