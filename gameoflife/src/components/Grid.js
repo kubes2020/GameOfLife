@@ -1,19 +1,24 @@
 import React, { useContext, useEffect, useCallback, useState } from "react";
 import "../Styles/Grid.css";
 import GridSquare from "./GridSquare.js";
-import { GridContext } from "./contexts/GridContext.js";
+import { WidthContext } from "./contexts/WidthContext.js";
+// import Utils from "./Game/HelperFunctions/Utils.js";
 import GameLogic from "./Game/GameLogic.js";
 import { clone } from "ramda";
 
+// If width changes, must also change it in HelperFunctions/Utils
+let width = 10;
+let height = 10;
+
 function Grid() {
-  // const { startingGrid, setStartingGrid } = useContext(GridContext);
+  const [gridWidth] = useState(width);
 
   let grid1 = [];
   let row = 0;
   let col = 0;
 
-  while (row < 10) {
-    for (col = 0; col < 10; col++) {
+  while (row < width) {
+    for (col = 0; col < height; col++) {
       if (
         (row === 4 && col === 5) ||
         (row === 5 && col === 5) ||
@@ -37,25 +42,32 @@ function Grid() {
     row += 1;
   }
   const [startingGrid, setStartingGrid] = useState(grid1);
-
   const grid2 = clone(grid1);
 
-  // const makeGrid = useCallback((startingGrid) => {
-  //   if (startingGrid !== null) {
-  //     setStartingGrid(grid1);
-  //   }
-  // }, []);
+  const handleClick = (e) => {
+    console.log("this is click", e.target.id);
+  };
 
   return (
     <>
-      <h1>Test Grid Page</h1>
-      <GameLogic
-        grid1={startingGrid}
-        grid2={grid2}
-        setStartingGrid={setStartingGrid}
-      />
+      <WidthContext.Provider value={{ gridWidth }}>
+        <h1>Test Grid Page</h1>
+        <GameLogic
+          grid1={startingGrid}
+          grid2={grid2}
+          setStartingGrid={setStartingGrid}
+        />
+      </WidthContext.Provider>
 
-      <div className="box-container"></div>
+      <div className="box-container">
+        {startingGrid.map((item) => {
+          return (
+            <button onClick={handleClick} id={item.id} className="box">
+              {item.isAlive}
+            </button>
+          );
+        })}
+      </div>
     </>
   );
 }

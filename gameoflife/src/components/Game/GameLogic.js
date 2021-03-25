@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { WidthContext } from "../contexts/WidthContext";
 import {
   checkAliveN,
   checkAliveNE,
@@ -8,24 +9,26 @@ import {
   checkAliveSW,
   checkAliveW,
   checkAliveNW,
-} from "./HelperFunctions/utils.js";
+} from "./HelperFunctions/Utils.js";
 
 function GameLogic(props) {
-  const gridLength = props.grid1.length ** 0.5;
+  const { gridWidth } = useContext(WidthContext);
 
   // This adjusts isAlive but only for grid2
   const adjustNextGrid = (aliveCount, row, col) => {
-    let index = row.toString() + col.toString();
+    // To get the correct index from a 1 dimensional array
+    // use this formula: col + width * row
+    let index = row * gridWidth + col;
     if (
       aliveCount >= 2 &&
       aliveCount <= 3 &&
-      props.grid1[parseInt(index)].isAlive === 1
+      props.grid1[index].isAlive === 1
     ) {
-      props.grid2[parseInt(index)].isAlive = 1;
-    } else if (aliveCount === 3 && props.grid1[parseInt(index)].isAlive === 0) {
-      props.grid2[parseInt(index)].isAlive = 1;
+      props.grid2[index].isAlive = 1;
+    } else if (aliveCount === 3 && props.grid1[index].isAlive === 0) {
+      props.grid2[index].isAlive = 1;
     } else {
-      props.grid2[parseInt(index)].isAlive = 0;
+      props.grid2[index].isAlive = 0;
     }
     return 0;
   };
@@ -37,23 +40,23 @@ function GameLogic(props) {
     if (row > 0 && checkAliveN(grid, row, col)) {
       aliveCount += 1;
     }
-    if (row > 0 && col < gridLength - 1 && checkAliveNE(grid, row, col)) {
+    if (row > 0 && col < gridWidth - 1 && checkAliveNE(grid, row, col)) {
       aliveCount += 1;
     }
-    if (col < gridLength - 1 && checkAliveE(grid, row, col)) {
+    if (col < gridWidth - 1 && checkAliveE(grid, row, col)) {
       aliveCount += 1;
     }
     if (
-      row < gridLength - 1 &&
-      col < gridLength - 1 &&
+      row < gridWidth - 1 &&
+      col < gridWidth - 1 &&
       checkAliveSE(grid, row, col)
     ) {
       aliveCount += 1;
     }
-    if (row < gridLength - 1 && checkAliveS(grid, row, col)) {
+    if (row < gridWidth - 1 && checkAliveS(grid, row, col)) {
       aliveCount += 1;
     }
-    if (row < gridLength - 1 && col > 0 && checkAliveSW(grid, row, col)) {
+    if (row < gridWidth - 1 && col > 0 && checkAliveSW(grid, row, col)) {
       aliveCount += 1;
     }
     if (col > 0 && checkAliveW(grid, row, col)) {
@@ -73,23 +76,23 @@ function GameLogic(props) {
     if (row > 0 && !checkAliveN(grid, row, col)) {
       deadIndices.push({ row: row - 1, col: col });
     }
-    if (row > 0 && col < gridLength - 1 && !checkAliveNE(grid, row, col)) {
+    if (row > 0 && col < gridWidth - 1 && !checkAliveNE(grid, row, col)) {
       deadIndices.push({ row: row - 1, col: col + 1 });
     }
-    if (col < gridLength - 1 && !checkAliveE(grid, row, col)) {
+    if (col < gridWidth - 1 && !checkAliveE(grid, row, col)) {
       deadIndices.push({ row: row, col: col + 1 });
     }
     if (
-      row < gridLength - 1 &&
-      col < gridLength - 1 &&
+      row < gridWidth - 1 &&
+      col < gridWidth - 1 &&
       !checkAliveSE(grid, row, col)
     ) {
       deadIndices.push({ row: row + 1, col: col + 1 });
     }
-    if (row < gridLength - 1 && !checkAliveS(grid, row, col)) {
+    if (row < gridWidth - 1 && !checkAliveS(grid, row, col)) {
       deadIndices.push({ row: row + 1, col: col });
     }
-    if (row < gridLength - 1 && col > 0 && !checkAliveSW(grid, row, col)) {
+    if (row < gridWidth - 1 && col > 0 && !checkAliveSW(grid, row, col)) {
       deadIndices.push({ row: row + 1, col: col - 1 });
     }
     if (col > 0 && !checkAliveW(grid, row, col)) {
@@ -139,7 +142,6 @@ function GameLogic(props) {
   return (
     <>
       <h5>Test GameLogic Page</h5>
-      <p>{props.grid1[55].isAlive}</p>
       <button onClick={handleClick}>Run Graph</button>
     </>
   );

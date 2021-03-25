@@ -4,9 +4,11 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    width: 725px;
-    height: 725px;
-    border: 2px solid green;
+    width: 250px;
+    height: 250px;
+    /* width: 725px;
+    height: 725px; */
+    border: 2px solid rgb(10, 92, 10);
 }
 
 
@@ -15,5 +17,5 @@
     height: 25px;
     /* flex: 1 1 2.3%; */
     /* flex-grow: 1; */
-    border: 2px solid red;
+    border: 2px solid rgb(44, 69, 97);
 }
