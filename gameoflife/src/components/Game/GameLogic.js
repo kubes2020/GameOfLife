@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { WidthContext } from "../contexts/WidthContext";
+import { clone } from "ramda";
 import {
   checkAliveN,
   checkAliveNE,
@@ -37,32 +38,40 @@ function GameLogic(props) {
   const findNeighborsAlive = (grid, row, col) => {
     let aliveCount = 0;
 
-    if (row > 0 && checkAliveN(grid, row, col)) {
+    if (row > 0 && checkAliveN(grid, row, col, gridWidth)) {
       aliveCount += 1;
     }
-    if (row > 0 && col < gridWidth - 1 && checkAliveNE(grid, row, col)) {
+    if (
+      row > 0 &&
+      col < gridWidth - 1 &&
+      checkAliveNE(grid, row, col, gridWidth)
+    ) {
       aliveCount += 1;
     }
-    if (col < gridWidth - 1 && checkAliveE(grid, row, col)) {
+    if (col < gridWidth - 1 && checkAliveE(grid, row, col, gridWidth)) {
       aliveCount += 1;
     }
     if (
       row < gridWidth - 1 &&
       col < gridWidth - 1 &&
-      checkAliveSE(grid, row, col)
+      checkAliveSE(grid, row, col, gridWidth)
     ) {
       aliveCount += 1;
     }
-    if (row < gridWidth - 1 && checkAliveS(grid, row, col)) {
+    if (row < gridWidth - 1 && checkAliveS(grid, row, col, gridWidth)) {
       aliveCount += 1;
     }
-    if (row < gridWidth - 1 && col > 0 && checkAliveSW(grid, row, col)) {
+    if (
+      row < gridWidth - 1 &&
+      col > 0 &&
+      checkAliveSW(grid, row, col, gridWidth)
+    ) {
       aliveCount += 1;
     }
-    if (col > 0 && checkAliveW(grid, row, col)) {
+    if (col > 0 && checkAliveW(grid, row, col, gridWidth)) {
       aliveCount += 1;
     }
-    if (row > 0 && col > 0 && checkAliveNW(grid, row, col)) {
+    if (row > 0 && col > 0 && checkAliveNW(grid, row, col, gridWidth)) {
       aliveCount += 1;
     }
 
@@ -73,32 +82,40 @@ function GameLogic(props) {
   // Function to get indices of dead nodes around the one alive node
   const findIndicesOfDead = (grid, row, col) => {
     let deadIndices = [];
-    if (row > 0 && !checkAliveN(grid, row, col)) {
+    if (row > 0 && !checkAliveN(grid, row, col, gridWidth)) {
       deadIndices.push({ row: row - 1, col: col });
     }
-    if (row > 0 && col < gridWidth - 1 && !checkAliveNE(grid, row, col)) {
+    if (
+      row > 0 &&
+      col < gridWidth - 1 &&
+      !checkAliveNE(grid, row, col, gridWidth)
+    ) {
       deadIndices.push({ row: row - 1, col: col + 1 });
     }
-    if (col < gridWidth - 1 && !checkAliveE(grid, row, col)) {
+    if (col < gridWidth - 1 && !checkAliveE(grid, row, col, gridWidth)) {
       deadIndices.push({ row: row, col: col + 1 });
     }
     if (
       row < gridWidth - 1 &&
       col < gridWidth - 1 &&
-      !checkAliveSE(grid, row, col)
+      !checkAliveSE(grid, row, col, gridWidth)
     ) {
       deadIndices.push({ row: row + 1, col: col + 1 });
     }
-    if (row < gridWidth - 1 && !checkAliveS(grid, row, col)) {
+    if (row < gridWidth - 1 && !checkAliveS(grid, row, col, gridWidth)) {
       deadIndices.push({ row: row + 1, col: col });
     }
-    if (row < gridWidth - 1 && col > 0 && !checkAliveSW(grid, row, col)) {
+    if (
+      row < gridWidth - 1 &&
+      col > 0 &&
+      !checkAliveSW(grid, row, col, gridWidth)
+    ) {
       deadIndices.push({ row: row + 1, col: col - 1 });
     }
-    if (col > 0 && !checkAliveW(grid, row, col)) {
+    if (col > 0 && !checkAliveW(grid, row, col, gridWidth)) {
       deadIndices.push({ row: row, col: col - 1 });
     }
-    if (row > 0 && col > 0 && !checkAliveNW(grid, row, col)) {
+    if (row > 0 && col > 0 && !checkAliveNW(grid, row, col, gridWidth)) {
       deadIndices.push({ row: row - 1, col: col - 1 });
     }
     console.log("deadIndices:", deadIndices);
@@ -136,7 +153,7 @@ function GameLogic(props) {
 
   function handleClick(e) {
     e.preventDefault();
-    props.setStartingGrid(props.grid2);
+    props.setStartingGrid(clone(props.grid2));
   }
 
   return (

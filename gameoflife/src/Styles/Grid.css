@@ -18,4 +18,14 @@
     /* flex: 1 1 2.3%; */
     /* flex-grow: 1; */
     border: 2px solid rgb(44, 69, 97);
+    background-color: rgb(147, 147, 145);
+}
+
+.box-alive {
+    width: 25px;
+    height: 25px;
+    /* flex: 1 1 2.3%; */
+    /* flex-grow: 1; */
+    border: 2px solid rgb(44, 69, 97);
+    background-color: yellow;
 }

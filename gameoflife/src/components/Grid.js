@@ -11,18 +11,20 @@ let width = 10;
 let height = 10;
 
 function Grid() {
+  // this is to pass gridWidth via context api
   const [gridWidth] = useState(width);
 
   let grid1 = [];
   let row = 0;
   let col = 0;
-
   while (row < width) {
     for (col = 0; col < height; col++) {
       if (
-        (row === 4 && col === 5) ||
+        (row === 4 && col === 4) ||
+        (row === 5 && col === 4) ||
         (row === 5 && col === 5) ||
-        (row === 6 && col === 5)
+        (row === 6 && col === 5) ||
+        (row === 6 && col === 3)
       ) {
         grid1.push({
           row: row,
@@ -36,16 +38,20 @@ function Grid() {
           isAlive: 0,
         });
       }
-
-      // grid1.push(<div className="box">{col}</div>);
     }
     row += 1;
   }
   const [startingGrid, setStartingGrid] = useState(grid1);
   const grid2 = clone(grid1);
 
-  const handleClick = (e) => {
-    console.log("this is click", e.target.id);
+  // const [endingGrid, setEndingGrid] = useState(clone(startingGrid));
+  // useEffect(() => {
+  //   console.log("setEndingGrid ran");
+  //   setEndingGrid(clone(startingGrid));
+  // }, [startingGrid]);
+
+  const handleClick = (e, item) => {
+    console.log("this is item", item);
   };
 
   return (
@@ -62,7 +68,10 @@ function Grid() {
       <div className="box-container">
         {startingGrid.map((item) => {
           return (
-            <button onClick={handleClick} id={item.id} className="box">
+            <button
+              onClick={(e) => handleClick(e, item)}
+              className={item.isAlive ? "box-alive" : "box"}
+            >
               {item.isAlive}
             </button>
           );
