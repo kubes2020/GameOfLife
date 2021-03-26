@@ -2,11 +2,9 @@ import React, { useContext, useEffect, useCallback, useState } from "react";
 import "../Styles/Grid.css";
 import GridSquare from "./GridSquare.js";
 import { WidthContext } from "./contexts/WidthContext.js";
-// import Utils from "./Game/HelperFunctions/Utils.js";
 import GameLogic from "./Game/GameLogic.js";
 import { clone } from "ramda";
 
-// If width changes, must also change it in HelperFunctions/Utils
 let width = 10;
 let height = 10;
 
@@ -14,44 +12,34 @@ function Grid() {
   // this is to pass gridWidth via context api
   const [gridWidth] = useState(width);
 
-  let grid1 = [];
+  let gridBlank = [];
   let row = 0;
   let col = 0;
+
   while (row < width) {
     for (col = 0; col < height; col++) {
-      if (
-        (row === 4 && col === 4) ||
-        (row === 5 && col === 4) ||
-        (row === 5 && col === 5) ||
-        (row === 6 && col === 5) ||
-        (row === 6 && col === 3)
-      ) {
-        grid1.push({
-          row: row,
-          col: col,
-          isAlive: 1,
-        });
-      } else {
-        grid1.push({
-          row: row,
-          col: col,
-          isAlive: 0,
-        });
-      }
+      gridBlank.push({
+        row: row,
+        col: col,
+        isAlive: 0,
+      });
     }
     row += 1;
   }
-  const [startingGrid, setStartingGrid] = useState(grid1);
-  const grid2 = clone(grid1);
 
-  // const [endingGrid, setEndingGrid] = useState(clone(startingGrid));
-  // useEffect(() => {
-  //   console.log("setEndingGrid ran");
-  //   setEndingGrid(clone(startingGrid));
-  // }, [startingGrid]);
+  const [startingGrid, setStartingGrid] = useState(gridBlank);
+  const grid2 = clone(startingGrid);
 
   const handleClick = (e, item) => {
     console.log("this is item", item);
+
+    setStartingGrid(
+      startingGrid.map((gridItem) => {
+        return gridItem.row === item.row && gridItem.col === item.col
+          ? { ...gridItem, isAlive: gridItem.isAlive ? 0 : 1 }
+          : gridItem;
+      })
+    );
   };
 
   return (
@@ -62,14 +50,16 @@ function Grid() {
           grid1={startingGrid}
           grid2={grid2}
           setStartingGrid={setStartingGrid}
+          gridReset={gridBlank}
         />
       </WidthContext.Provider>
 
       <div className="box-container">
-        {startingGrid.map((item) => {
+        {startingGrid.map((item, index) => {
           return (
             <button
               onClick={(e) => handleClick(e, item)}
+              key={index}
               className={item.isAlive ? "box-alive" : "box"}
             >
               {item.isAlive}

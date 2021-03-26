@@ -151,15 +151,32 @@ function GameLogic(props) {
 
   console.log("this is props.grid2", props.grid2);
 
-  function handleClick(e) {
+  function handleNext(e) {
     e.preventDefault();
+    // next();
     props.setStartingGrid(clone(props.grid2));
+  }
+  function handleClear(e) {
+    e.preventDefault();
+    props.setStartingGrid(props.gridReset);
+  }
+  function handleRun(e) {
+    // e.preventDefault();
+    // setInterval(props.setStartingGrid(clone(props.grid2)), 1000);
+    next();
+  }
+  function next() {
+    setInterval(() => {
+      props.setStartingGrid(clone(props.grid2));
+    }, 1000);
   }
 
   return (
     <>
       <h5>Test GameLogic Page</h5>
-      <button onClick={handleClick}>Run Graph</button>
+      <button onClick={handleNext}>Next</button>
+      <button onClick={handleClear}>Clear</button>
+      <button onClick={handleRun}>Run</button>
     </>
   );
 }
