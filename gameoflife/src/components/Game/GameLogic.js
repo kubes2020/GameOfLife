@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
 import { WidthContext } from "../contexts/WidthContext";
 import { clone } from "ramda";
 import {
@@ -153,23 +153,15 @@ function GameLogic(props) {
 
   function handleNext(e) {
     e.preventDefault();
-    // next();
     props.setStartingGrid(clone(props.grid2));
   }
   function handleClear(e) {
     e.preventDefault();
     props.setStartingGrid(props.gridReset);
   }
-  function handleRun(e) {
-    // e.preventDefault();
-    // setInterval(props.setStartingGrid(clone(props.grid2)), 1000);
-    next();
-  }
-  function next() {
-    setInterval(() => {
-      props.setStartingGrid(clone(props.grid2));
-    }, 1000);
-  }
+  const handleRun = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <>

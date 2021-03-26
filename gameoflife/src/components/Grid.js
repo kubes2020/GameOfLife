@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useCallback, useState } from "react";
+import React, { useState } from "react";
 import "../Styles/Grid.css";
-import GridSquare from "./GridSquare.js";
 import { WidthContext } from "./contexts/WidthContext.js";
 import GameLogic from "./Game/GameLogic.js";
 import { clone } from "ramda";
@@ -21,7 +20,7 @@ function Grid() {
       gridBlank.push({
         row: row,
         col: col,
-        isAlive: 0,
+        isAlive: Math.floor(Math.random() * 4) === 1 ? 1 : 0,
       });
     }
     row += 1;
