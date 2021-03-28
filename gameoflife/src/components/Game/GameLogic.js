@@ -13,7 +13,9 @@ import {
 } from "./HelperFunctions/Utils.js";
 
 function GameLogic(props) {
-  const { gridWidth } = useContext(WidthContext);
+  const { gridWidth } = props;
+  const grid2 = clone(props.grid1);
+  // const { gridWidth } = useContext(WidthContext);
 
   // This adjusts isAlive but only for grid2
   const adjustNextGrid = (aliveCount, row, col) => {
@@ -25,11 +27,11 @@ function GameLogic(props) {
       aliveCount <= 3 &&
       props.grid1[index].isAlive === 1
     ) {
-      props.grid2[index].isAlive = 1;
+      grid2[index].isAlive = 1;
     } else if (aliveCount === 3 && props.grid1[index].isAlive === 0) {
-      props.grid2[index].isAlive = 1;
+      grid2[index].isAlive = 1;
     } else {
-      props.grid2[index].isAlive = 0;
+      grid2[index].isAlive = 0;
     }
     return 0;
   };
@@ -149,15 +151,15 @@ function GameLogic(props) {
     return 0;
   });
 
-  console.log("this is props.grid2", props.grid2);
+  console.log("this is grid2", grid2);
 
   function handleNext(e) {
     e.preventDefault();
-    props.setStartingGrid(clone(props.grid2));
+    props.setStartingGrid(grid2);
   }
   function handleClear(e) {
     e.preventDefault();
-    props.setStartingGrid(props.gridReset);
+    props.gridReset();
   }
   const handleRun = (e) => {
     e.preventDefault();
