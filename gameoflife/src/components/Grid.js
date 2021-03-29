@@ -158,42 +158,27 @@ class Grid extends Component {
 
   runProgram = (e) => {
     // e.preventDefault();
-    console.log("componentWillUpdate just ran!");
+    console.log("runProgram just triggered!");
     // Create deep copy of grid1
     let grid2 = clone(this.state.grid1);
 
-    // (1) Iterate through grid1 array, stop at isAlive === 1
-    // (2) Check how many neighbors are alive, adjust grid2 based on that number
-    // (3) Find the immediate neighbors who are currently dead, then repeat step (2) with these new indices
+    // (1) Iterate through grid1 array
+    // (2) Check how many neighbors are alive
+    // (3) Adjust grid2 based on that number
+
     this.state.grid1.map((item) => {
-      let deadList = [];
-      if (item.isAlive === 1) {
-        console.log("Alive Node!!!", item.row, item.col);
-        // This function returns number of neighbors alive
-        let numAlive = this.findNeighborsAlive(
-          this.state.grid1,
-          item.row,
-          item.col
-        );
-        this.adjustNextGrid(numAlive, item.row, item.col, grid2);
-        // Find indices of all dead nodes, that surround this alive node
-        deadList = this.findIndicesOfDead(this.state.grid1, item.row, item.col);
-        // Iterate through the deadList to pass row/col into findNeighborsAlive function
-        deadList.map((dead) => {
-          // console.log("dead row/col", dead.row, dead.col);
-          let numAliveDeadList = this.findNeighborsAlive(
-            this.state.grid1,
-            dead.row,
-            dead.col
-          );
-          this.adjustNextGrid(numAliveDeadList, dead.row, dead.col, grid2);
-          return 0;
-        });
-        // rerender page with updated grid
-        this.setState({
-          grid1: grid2,
-        });
-      }
+      // This function returns number of neighbors alive
+      let numAlive = this.findNeighborsAlive(
+        this.state.grid1,
+        item.row,
+        item.col
+      );
+      this.adjustNextGrid(numAlive, item.row, item.col, grid2);
+      // rerender page with updated grid
+      this.setState({
+        grid1: grid2,
+      });
+
       return 0;
     });
   };
@@ -211,7 +196,7 @@ class Grid extends Component {
     this.setState({
       grid1: updateGrid,
     });
-    console.log("this is item clicked:", item);
+    // console.log("this is item clicked:", item);
   };
 
   playContinuous = (e) => {
@@ -250,6 +235,48 @@ class Grid extends Component {
 }
 
 export default Grid;
+
+// runProgram = (e) => {
+//   // e.preventDefault();
+//   console.log("componentWillUpdate just ran!");
+//   // Create deep copy of grid1
+//   let grid2 = clone(this.state.grid1);
+
+//   // (1) Iterate through grid1 array, stop at isAlive === 1
+//   // (2) Check how many neighbors are alive, adjust grid2 based on that number
+//   // (3) Find the immediate neighbors who are currently dead, then repeat step (2) with these new indices
+//   this.state.grid1.map((item) => {
+//     let deadList = [];
+//     if (item.isAlive === 1) {
+//       console.log("Alive Node!!!", item.row, item.col);
+//       // This function returns number of neighbors alive
+//       let numAlive = this.findNeighborsAlive(
+//         this.state.grid1,
+//         item.row,
+//         item.col
+//       );
+//       this.adjustNextGrid(numAlive, item.row, item.col, grid2);
+//       // Find indices of all dead nodes, that surround this alive node
+//       deadList = this.findIndicesOfDead(this.state.grid1, item.row, item.col);
+//       // Iterate through the deadList to pass row/col into findNeighborsAlive function
+//       deadList.map((dead) => {
+//         // console.log("dead row/col", dead.row, dead.col);
+//         let numAliveDeadList = this.findNeighborsAlive(
+//           this.state.grid1,
+//           dead.row,
+//           dead.col
+//         );
+//         this.adjustNextGrid(numAliveDeadList, dead.row, dead.col, grid2);
+//         return 0;
+//       });
+//       // rerender page with updated grid
+//       this.setState({
+//         grid1: grid2,
+//       });
+//     }
+//     return 0;
+//   });
+// };
 
 // function Grid() {
 // this is to pass gridWidth via context api
