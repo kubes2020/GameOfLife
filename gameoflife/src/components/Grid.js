@@ -155,7 +155,7 @@ class Grid extends Component {
   // *** Main Game Logic ***
 
   runProgram = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     console.log("runProgram just triggered!");
     // Create deep copy of grid1
     let grid2 = clone(this.state.grid1);
@@ -264,10 +264,11 @@ class Grid extends Component {
   };
 
   playContinuous = (e) => {
-    // e.preventDefault();
-    // let intervalId = "";
+    e.preventDefault();
     clearInterval(this.intervalId);
-    this.intervalId = setInterval(this.runProgram(e), 2000);
+    this.intervalId = setInterval(() => {
+      this.runProgram(e);
+    }, 2000);
   };
 
   render() {
