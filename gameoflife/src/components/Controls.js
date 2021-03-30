@@ -8,7 +8,7 @@ export default class Controls extends Component {
         <button className="buttons" onClick={this.props.runProgram}>
           Next
         </button>
-        <button className="buttons" onClick={this.props.gridReset}>
+        <button className="buttons" onClick={this.props.gridClear}>
           Clear
         </button>
         <button className="buttons" onClick={this.props.playContinuous}>
@@ -25,9 +25,6 @@ export default class Controls extends Component {
         </button>
         <button className="buttons" onClick={this.props.seededGrid}>
           Seeded Grid
-        </button>
-        <button className="buttons" onClick={this.props.unSeedGrid}>
-          Unseeded Grid
         </button>
       </div>
     );
