@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "../Styles/Grid.css";
-// import GameLogic from "./Game/GameLogic.js";
+import Controls from "./Controls.js";
 import { clone } from "ramda";
+// import GameLogic from "./Game/GameLogic.js";
 // import {
 //   checkAliveN,
 //   checkAliveNE,
@@ -16,33 +17,50 @@ import { clone } from "ramda";
 class Grid extends Component {
   constructor(props) {
     super(props);
-    this.width = 10;
-    this.height = 10;
+    this.width = 25;
+    this.height = 25;
     this.state = {
       grid1: Array(this.width * this.height).fill({}),
+      speed: 0,
+      seededGrid: false,
     };
   }
 
   gridReset = () => {
+    clearInterval(this.intervalId);
     let startBlank = [];
     let col = 0;
     let row = 0;
     while (row < this.width) {
-      for (col = 0; col < this.height; col++) {
-        startBlank.push({
-          row: row,
-          col: col,
-          // isAlive: Math.floor(Math.random() * 4) === 1 ? 1 : 0,
-          isAlive: 0,
-        });
+      console.log("grid seeded in gridReset?", this.state.seededGrid);
+      if (this.state.seededGrid) {
+        for (col = 0; col < this.height; col++) {
+          startBlank.push({
+            row: row,
+            col: col,
+            isAlive: Math.floor(Math.random() * 4) === 1 ? 1 : 0,
+          });
+        }
+        row += 1;
+      } else {
+        for (col = 0; col < this.height; col++) {
+          startBlank.push({
+            row: row,
+            col: col,
+            isAlive: 0,
+          });
+        }
+        row += 1;
       }
-      row += 1;
     }
     this.setState({ grid1: startBlank });
   };
 
   componentDidMount() {
     this.gridReset();
+    this.setState({
+      speed: 1000,
+    });
     // this.playContinuous();
   }
 
@@ -159,7 +177,6 @@ class Grid extends Component {
     console.log("runProgram just triggered!");
     // Create deep copy of grid1
     let grid2 = clone(this.state.grid1);
-
     // (1) Iterate through grid1 array
     // (2) Check how many neighbors are alive
     // (3) Adjust grid2 based on that number
@@ -222,7 +239,6 @@ class Grid extends Component {
       ) {
         aliveCount += 1;
       }
-      // console.log("aliveCount", aliveCount);
 
       // update grid2 with aliveCount
       let index = item.row * this.width + item.col;
@@ -237,13 +253,11 @@ class Grid extends Component {
       } else {
         grid2[index] = { ...grid2[index], isAlive: 0 };
       }
-
-      // rerender page with updated grid
-      this.setState({
-        grid1: grid2,
-      });
-
       return this.state.grid1;
+    });
+    // rerender page with updated grid
+    this.setState({
+      grid1: grid2,
     });
   };
 
@@ -252,7 +266,7 @@ class Grid extends Component {
   // To get the correct index from a 1 dimensional array
   // use this formula: col + width * row
   handleClick = (e, item) => {
-    e.preventDefault();
+    // e.preventDefault();
     let index = item.row * this.width + item.col;
     let updateGrid = this.state.grid1;
     updateGrid[index] =
@@ -260,7 +274,6 @@ class Grid extends Component {
     this.setState({
       grid1: updateGrid,
     });
-    // console.log("this is item clicked:", item);
   };
 
   playContinuous = (e) => {
@@ -268,18 +281,57 @@ class Grid extends Component {
     clearInterval(this.intervalId);
     this.intervalId = setInterval(() => {
       this.runProgram(e);
-    }, 2000);
+    }, this.state.speed);
+  };
+
+  pause = (e) => {
+    e.preventDefault();
+    clearInterval(this.intervalId);
+  };
+
+  faster = (e) => {
+    e.preventDefault();
+    clearInterval(this.intervalId);
+    this.setState((prevState) => ({
+      speed: prevState.speed * 0.7,
+    }));
+    this.playContinuous(e);
+  };
+
+  slower = (e) => {
+    e.preventDefault();
+    clearInterval(this.intervalId);
+    this.setState((prevState) => ({
+      speed: prevState.speed * 1.2,
+    }));
+    this.playContinuous(e);
+  };
+
+  seededGrid = (e) => {
+    e.preventDefault();
+    clearInterval(this.intervalId);
+    console.log("grid seeded in seededGrid func?", this.state.seededGrid);
+    this.setState({
+      seededGrid: true,
+    });
+    // this.forceUpdate(e);
+    // this.gridReset();
+  };
+
+  unSeededGrid = (e) => {
+    e.preventDefault();
+    clearInterval(this.intervalId);
+    this.setState({
+      seededGrid: false,
+    });
+    this.gridReset();
+    // this.forceUpdate();
   };
 
   render() {
-    // console.log("from render grid1", this.state.grid1);
-
     return (
       <>
-        <h1>test me</h1>
-        <button onClick={this.runProgram}>Next</button>
-        <button onClick={this.gridReset}>Clear</button>
-        <button onClick={this.playContinuous}>Start</button>
+        <h1>Game Of Life</h1>
 
         <div className="box-container">
           {this.state.grid1.map((item, index) => {
@@ -288,11 +340,23 @@ class Grid extends Component {
                 onClick={(e) => this.handleClick(e, item)}
                 key={index}
                 className={item.isAlive ? "box-alive" : "box"}
-              >
-                {item.isAlive}
-              </button>
+              ></button>
             );
           })}
+        </div>
+        <div>
+          <Controls
+            runProgram={this.runProgram}
+            gridReset={this.gridReset}
+            speed={this.state.speed}
+            intervalId={this.intervalId}
+            playContinuous={this.playContinuous}
+            faster={this.faster}
+            slower={this.slower}
+            seededGrid={this.seededGrid}
+            unSeededGrid={this.unSeededGrid}
+            pause={this.pause}
+          ></Controls>
         </div>
       </>
     );
