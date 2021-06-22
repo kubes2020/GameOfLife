@@ -1,3 +1,5 @@
+This application was created by Brian Kubes to demonstrate John Conway's Game Of Life. After you get the app up and running locally, feel free to try out the cellular automaton by clicking cells inside the grid, then click the "Start" button to watch the iterations morph based on a set of algorithmic rules. 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
